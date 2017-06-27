@@ -2,14 +2,6 @@ var redux = require('redux');
 
 console.log('Starting redux example');
 
-var stateDefault = {
-  name: 'Anonymous',
-  hobbies: [],
-  movies: []
-}
-
-var nextHobbyId = 1;
-var nextMovieId = 1;
 var oldReducer = (state = stateDefault, action) => {
   // state = state || {name: 'Anonymous'};
 
@@ -57,6 +49,8 @@ var oldReducer = (state = stateDefault, action) => {
   }
 };
 
+// Name reducer and action generators
+// ----------------------------------
 var nameReducer = (state = "Anonymous", action) => {
   switch (action.type) {
     case 'CHANGE_NAME':
@@ -66,6 +60,17 @@ var nameReducer = (state = "Anonymous", action) => {
   };
 };
 
+var changeName = (name) => {
+  return {
+    type: 'CHANGE_NAME',
+    name
+  }
+};
+
+
+// Hobby reducer and action generators
+// ----------------------------------
+var nextHobbyId = 1;
 var hobbiesReducer = (state = [], action) => {
   switch (action.type) {
     case 'ADD_HOBBY':
@@ -83,6 +88,23 @@ var hobbiesReducer = (state = [], action) => {
   }
 };
 
+var addHobby = (hobby) => {
+  return {
+    type: 'ADD_HOBBY',
+    hobby
+  }
+};
+
+var removeHobby = (id) => {
+  return {
+    type: 'REMOVE_HOBBY',
+    id
+  }
+};
+
+// Movie reducer and action generators
+// ----------------------------------
+var nextMovieId = 1;
 var moviesReducer = (state = [], action) => {
   switch (action.type) {
     case 'ADD_MOVIE':
@@ -98,6 +120,21 @@ var moviesReducer = (state = [], action) => {
       return state.filter((movie) => movie.id !== action.id)
     default:
       return state;
+  }
+};
+
+var addMovie = (title, genre) => {
+  return {
+    type: 'ADD_MOVIE',
+    title,
+    genre
+  }
+};
+
+var removeMovie = (id) => {
+  return {
+    type: 'REMOVE_MOVIE',
+    id
   }
 };
 
@@ -125,50 +162,15 @@ var unsubscribe = store.subscribe(() => {
 var currentState = store.getState();
 console.log('currentState', currentState);
 
-store.dispatch({
-  type: 'CHANGE_NAME',
-  name: 'Zack'
-});
+store.dispatch(changeName('Zack'));
 
-store.dispatch({
-  type: 'ADD_HOBBY',
-  hobby: 'Cycling'
-});
+store.dispatch(addHobby('Cycling'));
+store.dispatch(addHobby('Walking'));
+store.dispatch(removeHobby(2));
 
-store.dispatch({
-  type: 'ADD_HOBBY',
-  hobby: 'Walking'
-});
+store.dispatch(addMovie('Terminator', 'Action'));
+store.dispatch(removeMovie(1));
+store.dispatch(addMovie('Jurassic Park', 'Action'));
+store.dispatch(addMovie('Stepbrothers', 'Comedy'));
 
-store.dispatch({
-  type: 'REMOVE_HOBBY',
-  id: 2
-})
-
-store.dispatch({
-  type: 'ADD_MOVIE',
-  title: 'Terminator',
-  genre: 'Action'
-});
-
-store.dispatch({
-  type: 'REMOVE_MOVIE',
-  id: 1
-})
-
-store.dispatch({
-  type: 'ADD_MOVIE',
-  title: 'Jurassic Park',
-  genre: 'Action'
-});
-
-store.dispatch({
-  type: 'ADD_MOVIE',
-  title: 'Stepbrothers',
-  genre: 'Comedy'
-});
-
-store.dispatch({
-  type: 'CHANGE_NAME',
-  name: 'Skylar'
-});
+store.dispatch(changeName('Skylar'));
